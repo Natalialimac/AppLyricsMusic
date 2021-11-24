@@ -1,23 +1,21 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
-import {Text} from 'react-native';
 import {
-  Container,
-  ContainerArtist,
-  InputArea,
-  ContainerMusic,
-  CustomButtonText,
-  CustomButton,
-} from './styles';
+  TextInput,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  Button,
+  View,
+} from 'react-native';
+import {styles} from './styles';
 
 const Home = () => {
   const [artist, setArtist] = useState('');
-
   const [music, setMusic] = useState('');
-
   const [text, setText] = useState('');
 
-  useEffect(() => {
+  const handleOnSearch = () => {
     axios
       .get(
         'https://api.vagalume.com.br/search.php?apikey=660a4395f992ff67786584e238f501aa&art=' +
@@ -26,8 +24,6 @@ const Home = () => {
           music,
       )
       .then(res => {
-        console.log(res.data);
-
         if (
           res.data.type === 'notfound' ||
           res.data === undefined ||
@@ -38,38 +34,38 @@ const Home = () => {
           setText(res.data.mus[0].text);
         }
       });
-  }, [artist, music]);
+  };
 
-  function handleOnArtistChange(e) {
-    setArtist(e.target.value);
-  }
+  const handleOnArtistChange = e => {
+    setArtist(e);
+  };
 
-  function handleOnMusicChange(e) {
-    setMusic(e.target.value);
-  }
+  const handleOnMusicChange = e => {
+    setMusic(e);
+  };
 
   return (
-    <Container>
-      <ContainerArtist>
-        <CustomButtonText>Artista</CustomButtonText>
-        {/* add placeholder */}
-        <InputArea>
-          <Text>Qual o nome do artista?</Text>
-        </InputArea>
-      </ContainerArtist>
-
-      <ContainerMusic>
-        <CustomButtonText>Musica</CustomButtonText>
-        {/* add placeholder */}
-        <InputArea>
-          <Text>Insira o nome da música</Text>
-        </InputArea>
-      </ContainerMusic>
-
-      <CustomButton>
-        <CustomButtonText>Pesquisar</CustomButtonText>
-      </CustomButton>
-    </Container>
+    <SafeAreaView style={styles.area}>
+      <Text style={styles.text1}>LetraMusic</Text>
+      <TextInput
+        style={styles.input}
+        onChangeText={e => handleOnArtistChange(e)}
+        value={artist}
+        placeholder="Nome do artista"
+        keyboardType="text"
+      />
+      <TextInput
+        style={styles.input}
+        onChangeText={e => handleOnMusicChange(e)}
+        value={music}
+        placeholder="Nome da música"
+        keyboardType="text"
+      />
+      <Button onPress={handleOnSearch} title="Procurar" color="#268596" />
+      <ScrollView style={styles.scrollView}>
+        <Text style={styles.text}>{text}</Text>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

@@ -2,7 +2,7 @@
 
 React-native
 
-styled-components
+styledsheet
 
 react-navigation
 

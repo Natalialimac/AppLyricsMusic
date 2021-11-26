@@ -1,13 +1,7 @@
 import React, {useState, useEffect} from 'react';
+import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
-import {
-  TextInput,
-  Text,
-  SafeAreaView,
-  ScrollView,
-  Button,
-  View,
-} from 'react-native';
+import {TextInput, Text, SafeAreaView, ScrollView, Button} from 'react-native';
 import {styles} from './styles';
 import SQLite from 'react-native-sqlite-storage';
 
@@ -16,32 +10,37 @@ const db = SQLite.openDatabase(
     name: 'AppMusicDB',
     location: 'default',
   },
-  ()=>{},
-  error => { console.log(error) } 
-) 
+  () => {},
+  error => {
+    console.log(error);
+  },
+);
 
 const Home = () => {
   const [artist, setArtist] = useState('');
   const [music, setMusic] = useState('');
   const [text, setText] = useState('');
 
+  const navigation = useNavigation();
+
   useEffect(() => {
     createTable();
   });
 
-  const createTable = ()=> {
-    console.log("create table");
-    db.transaction((tx) => {
-      tx.executeSql("CREATE TABLE IF NOT EXISTS " + 
-      "MusicHistory " +
-      "( " +
-      "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-      "title TEXT, " +
-      "artist TEXT " +
-      ") "
-      )
-    })
-  }
+  const createTable = () => {
+    console.log('create table');
+    db.transaction(tx => {
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS ' +
+          'MusicHistory ' +
+          '( ' +
+          'id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
+          'title TEXT, ' +
+          'artist TEXT ' +
+          ') ',
+      );
+    });
+  };
 
   const handleOnSearch = () => {
     axios
@@ -60,12 +59,12 @@ const Home = () => {
           setText('Nenhuma música encontrada com essas informações');
         } else if (res.data.mus.length > 0) {
           setText(res.data.mus[0].text);
-          db.transaction((tx)=> {
+          db.transaction(tx => {
             tx.executeSql(
-              "INSERT INTO MusicHistory (title, artist) VALUES (?, ?)",
-              [music, artist]
-              );
-          })
+              'INSERT INTO MusicHistory (title, artist) VALUES (?, ?)',
+              [music, artist],
+            );
+          });
         }
       });
   };
@@ -96,10 +95,16 @@ const Home = () => {
         keyboardType="text"
       />
       <Button onPress={handleOnSearch} title="Procurar" color="#268596" />
-      <Button onPress={handleOnSearch} title="Histórico" color="#268596" />
+
       <ScrollView style={styles.scrollView}>
         <Text style={styles.text}>{text}</Text>
       </ScrollView>
+
+      <Button
+        onPress={() => navigation.navigate('Historic')}
+        title="Histórico"
+        color="#268596"
+      />
     </SafeAreaView>
   );
 };

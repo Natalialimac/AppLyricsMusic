@@ -2,13 +2,31 @@ import React from 'react';
 import {SafeAreaView, View, VirtualizedList, Text, Button} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {styles} from './styles';
+import db from '../database';
 
 const DATA = [];
 
 const getItem = (data, index) => ({
-  id: Math.random().toString(12).substring(0),
-  title: `Música ${index + 1} Artista`,
+ id: Math.random().toString(12).substring(0),
+ title: `Música ${index + 1} Artista`,
 });
+
+
+const getData = () => {
+  db.transaction((tx)=>{
+    tx.executeSql(
+      "SELECT * FROM MusicHistory",
+      [],
+      (tx, results) => {
+        var len = results.rows.length;
+        for(let i=0; i<len; i++){
+          var musicHistory = results.rows.item(i);
+          DATA.push(musicHistory);
+        }
+      }
+    )
+  })
+}
 
 const getItemCount = data => 5;
 

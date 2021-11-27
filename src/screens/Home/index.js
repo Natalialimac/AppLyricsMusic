@@ -3,18 +3,7 @@ import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import {TextInput, Text, SafeAreaView, ScrollView, Button} from 'react-native';
 import {styles} from './styles';
-import SQLite from 'react-native-sqlite-storage';
-
-const db = SQLite.openDatabase(
-  {
-    name: 'AppMusicDB',
-    location: 'default',
-  },
-  () => {},
-  error => {
-    console.log(error);
-  },
-);
+import db from '../database';
 
 const Home = () => {
   const [artist, setArtist] = useState('');
@@ -24,11 +13,12 @@ const Home = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
+    console.log('start create table');
     createTable();
+    console.log('finish create table');
   });
 
   const createTable = () => {
-    console.log('create table');
     db.transaction(tx => {
       tx.executeSql(
         'CREATE TABLE IF NOT EXISTS ' +
@@ -65,6 +55,7 @@ const Home = () => {
               [music, artist],
             );
           });
+          console.log('data inserted');
         }
       });
   };

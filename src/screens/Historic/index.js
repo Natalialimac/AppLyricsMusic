@@ -1,16 +1,10 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import {SafeAreaView, View, VirtualizedList, Text, Button} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {styles} from './styles';
 import db from '../database';
 
 const DATA = [];
-
-const getItem = (data, index) => ({
- id: Math.random().toString(12).substring(0),
- title: `Música ${index + 1} Artista`,
-});
-
 
 const getData = () => {
   db.transaction((tx)=>{
@@ -28,7 +22,14 @@ const getData = () => {
   })
 }
 
-const getItemCount = data => 5;
+useEffect(getData(),[])
+
+const getItem = (data, index) => ({
+ id: Math.random().toString(12).substring(0),
+ title: `Música: ${DATA[index + 1].music} Artista: ${DATA[index + 1].music}`,
+});
+
+const getItemCount = data => DATA.length;
 
 const Item = ({title}) => (
   <View style={styles.item}>

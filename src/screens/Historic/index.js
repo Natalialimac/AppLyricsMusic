@@ -2,7 +2,7 @@ import React,{useEffect} from 'react';
 import {SafeAreaView, View, VirtualizedList, Text, Button} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {styles} from './styles';
-import db from '../database';
+import db from '../../database/dbManager';
 
 const DATA = [];
 
@@ -22,7 +22,9 @@ const getData = () => {
   })
 }
 
-useEffect(getData(),[])
+
+  
+
 
 const getItem = (data, index) => ({
  id: Math.random().toString(12).substring(0),
@@ -40,6 +42,10 @@ const Item = ({title}) => (
 const Historic = () => {
   const navigation = useNavigation();
 
+  useEffect(()=>{
+    getData();
+  });
+  
   return (
     <SafeAreaView style={styles.container}>
       <Button

@@ -3,7 +3,7 @@ import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import {TextInput, Text, SafeAreaView, ScrollView, Button} from 'react-native';
 import {styles} from './styles';
-import db from '../database';
+import db from '../../database/dbManager';
 
 const Home = () => {
   const [artist, setArtist] = useState('');
@@ -16,7 +16,7 @@ const Home = () => {
     console.log('start create table');
     createTable();
     console.log('finish create table');
-  });
+  },[]);
 
   const createTable = () => {
     db.transaction(tx => {

@@ -26,7 +26,7 @@ useEffect(getData(),[])
 
 const getItem = (data, index) => ({
  id: Math.random().toString(12).substring(0),
- title: `Música: ${DATA[index + 1].music} Artista: ${DATA[index + 1].music}`,
+ title: `Música: ${DATA[index + 1].music} Artista: ${DATA[index + 1].artist}`,
 });
 
 const getItemCount = data => DATA.length;
